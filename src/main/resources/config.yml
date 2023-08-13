@@ -1,0 +1,30 @@
+Version: '${project.version}'
+
+Config:
+  Update-Notify: true
+
+Bot:
+  Token: ""
+  Status: "ONLINE"  # ONLINE, IDLE, DO_NOT_DISTURB, OFFLINE
+  Command: "profile"
+  Activity:
+    Type: "PLAYING"
+    Name: "Minecraft"
+
+Database:
+  URL: "jdbc:sqlite:CentralBot.sqlite"
+  User:
+  Password:
+
+Embed:
+  Title: "🎮 Stats for **{PLAYER}**"    # {PLAYER} -> player name
+  Thumbnail: "https://minotar.net/helm/{PLAYER}/100.png"     # {PLAYER} -> player name, {UUID} -> player UUID.
+  Empty-Field: "---"
+  Separator: "%"
+  Field:
+    InLine: true
+    Title: "{TITLE}"   # {TITLE} -> Field Title
+    Value: "```{VALUE}```"   # {VALUE} -> Field Value
+  Footer:
+    Text: "{AUTHOR}" # {AUTHOR} = Discord Name & Discriminator
+    Timestamp: true
