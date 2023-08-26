@@ -26,5 +26,5 @@ Embed:
     Title: "{TITLE}"   # {TITLE} -> Field Title
     Value: "```{VALUE}```"   # {VALUE} -> Field Value
   Footer:
-    Text: "{AUTHOR}" # {AUTHOR} = Discord Name & Discriminator
+    Text: "{AUTHOR}" # {AUTHOR} = Discord Name
     Timestamp: true
