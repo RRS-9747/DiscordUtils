@@ -3,7 +3,7 @@ version: '${project.version}'
 main: me.rrs.discordstats.DiscordStats
 api-version: '1.13'
 authors: [ RRS ]
-description: DiscordStats
+description: Get minecraft stats in discord
 website: https://discord.gg/fV4P2yMSgR
 
 softdepend:
