@@ -1,0 +1,30 @@
+name: DiscordUtils
+version: '${project.version}'
+main: me.rrs.discordutils.DiscordUtils
+api-version: '1.13'
+authors: [ RRS ]
+description: DiscordUtils
+website: https://discord.gg/fV4P2yMSgR
+
+softdepend:
+  - DiscordSRV
+  - BedWars1058
+depend:
+  - PlaceholderAPI
+commands:
+  addpapi:
+    description: Set title & placeholder
+    aliases: addpapi
+    permission: discordutils.admin
+    usage: /setpapi <title> <placeholder>
+
+  removepapi:
+    description: Remove title & placeholder
+    aliases: deletepapi
+    permission: discordutils.admin
+    usage: /removepapi <title>
+
+  editpapi:
+    description: edit title & placeholder
+    permission: discordutils.admin
+    usage: /editpapi title|papi <title> <placeholder>
