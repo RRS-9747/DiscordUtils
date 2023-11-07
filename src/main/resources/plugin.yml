@@ -9,9 +9,12 @@ website: https://discord.gg/fV4P2yMSgR
 softdepend:
   - DiscordSRV
   - BedWars1058
+  - MBedwars
 depend:
   - PlaceholderAPI
 commands:
+  discordutils:
+    aliases: du
   addpapi:
     description: Set title & placeholder
     aliases: addpapi

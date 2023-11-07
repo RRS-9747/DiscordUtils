@@ -3,7 +3,6 @@ package me.rrs.discordutils.profile.command.discord;
 import dev.dejvokep.boostedyaml.YamlDocument;
 import github.scarsz.discordsrv.DiscordSRV;
 import me.clip.placeholderapi.PlaceholderAPI;
-import me.rrs.discordutils.DiscordUtils;
 import me.rrs.discordutils.profile.command.ProfileCore;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
@@ -19,7 +18,7 @@ import java.util.UUID;
 
 public class StatsCommand extends ListenerAdapter {
 
-    final YamlDocument config = ProfileCore.getConfig();
+    private final YamlDocument config = ProfileCore.getConfig();
 
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
@@ -65,6 +64,7 @@ public class StatsCommand extends ListenerAdapter {
                 event.reply("``" + player.getName() + "``" + " has not played on the server before.").setEphemeral(true).queue();
                 return;
             }
+            event.deferReply().queue();
 
             EmbedBuilder builder = new EmbedBuilder();
             builder.setTitle(config.getString("Embed.Title").replace("{PLAYER}", player.getName()));
@@ -98,7 +98,7 @@ public class StatsCommand extends ListenerAdapter {
             }
             String author = event.getUser().getName();
             builder.setFooter(config.getString("Embed.Footer.Text").replace("{AUTHOR}", author), null);
-            event.replyEmbeds(builder.build()).queue();
+            event.getHook().editOriginalEmbeds(builder.build()).queue();
         }
     }
 

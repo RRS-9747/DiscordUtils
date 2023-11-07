@@ -7,7 +7,8 @@ import dev.dejvokep.boostedyaml.settings.dumper.DumperSettings;
 import dev.dejvokep.boostedyaml.settings.general.GeneralSettings;
 import dev.dejvokep.boostedyaml.settings.loader.LoaderSettings;
 import dev.dejvokep.boostedyaml.settings.updater.UpdaterSettings;
-import me.rrs.discordutils.bedwars.bedwars1058.BedwarsCore;
+import me.rrs.discordutils.bedwars.bedwars1058.BedWars1058Core;
+import me.rrs.discordutils.bedwars.mbedwars.MBedWarsCore;
 import me.rrs.discordutils.profile.command.ProfileCore;
 import me.rrs.discordutils.utils.UpdateAPI;
 import net.dv8tion.jda.api.JDA;
@@ -25,6 +26,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.bukkit.Bukkit.getPluginManager;
@@ -38,6 +40,7 @@ public final class DiscordUtils extends JavaPlugin {
     private JDA jda;
     private final ArrayList<SlashCommandData> commands = new ArrayList<>();
     private File modulesDir;
+    private ArrayList<YamlDocument> reloadList = new ArrayList<>();
 
 
     public static DiscordUtils getInstance() {
@@ -58,6 +61,9 @@ public final class DiscordUtils extends JavaPlugin {
     public File getModulesFolder(){
         return modulesDir;
     }
+    public ArrayList<YamlDocument> getReloadList() {
+        return reloadList;
+    }
 
     @Override
     public void onLoad(){
@@ -74,7 +80,6 @@ public final class DiscordUtils extends JavaPlugin {
             throw new RuntimeException(e);
         }
         modulesDir = new File(getDataFolder(), File.separator + "modules");
-
     }
 
     @Override
@@ -84,7 +89,6 @@ public final class DiscordUtils extends JavaPlugin {
         Bukkit.getLogger().info("    " + getDescription().getName() + " v" + getDescription().getVersion());
         Bukkit.getLogger().info("    " + "Running on " + Bukkit.getName());
         Bukkit.getLogger().info("");
-
 
         try {
             new BukkitRunnable() {
@@ -102,30 +106,31 @@ public final class DiscordUtils extends JavaPlugin {
         Bukkit.getLogger().info("[DiscordUtils] Loading bot...");
         loadBot();
 
+
         if (config.getBoolean("Modules.Profile")) {
             ProfileCore.loadModule();
         }
-        if (config.getBoolean("Modules.BedWars") && getPluginManager().isPluginEnabled("BedWars1058")) {
-            BedwarsCore.loadModule();
+        if (config.getBoolean("Modules.BedWars.BedWars1058") && getPluginManager().isPluginEnabled("BedWars1058")) {
+            BedWars1058Core.loadModule();
+        }
+        if (config.getBoolean("Modules.BedWars.MBedWars") && getPluginManager().isPluginEnabled("MBedwars")) {
+            MBedWarsCore.loadModule();
         }
 
         jda.updateCommands().addCommands(commands).queue();
 
+        getCommand("discordutils").setExecutor(new Commands());
     }
 
     @Override
     public void onDisable() {
         if (jda != null) {
-            jda.updateCommands().queue();
             jda.shutdown();
         }
     }
 
     private void loadBot() {
-        if (config.getString("Bot.Token").isEmpty()){
-            Bukkit.getLogger().severe("[DiscordUtils] Please set a valid bot token in config.yml");
-            return;
-        }
+
         jda = JDABuilder.createDefault(config.getString("Bot.Token"))
                 .enableIntents(GatewayIntent.MESSAGE_CONTENT)
                 .setAutoReconnect(true)
@@ -140,7 +145,7 @@ public final class DiscordUtils extends JavaPlugin {
         }
     }
 
-    public void updateChecker() {
+    private void updateChecker() {
         UpdateAPI updateAPI = new UpdateAPI();
 
         if (updateAPI.hasGithubUpdate("RRS-9747", "DiscordUtils")) {

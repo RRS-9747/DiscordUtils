@@ -17,4 +17,6 @@ Bot:
 
 Modules:
   Profile: true
-  BedWars: false
+  BedWars:
+    BedWars1058: false
+    MBedWars: false

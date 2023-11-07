@@ -5,8 +5,7 @@ import com.andrei1058.bedwars.api.levels.Level;
 import dev.dejvokep.boostedyaml.YamlDocument;
 import github.scarsz.discordsrv.DiscordSRV;
 import me.clip.placeholderapi.PlaceholderAPI;
-import me.rrs.discordutils.DiscordUtils;
-import me.rrs.discordutils.bedwars.bedwars1058.BedwarsCore;
+import me.rrs.discordutils.bedwars.bedwars1058.BedWars1058Core;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -25,7 +24,7 @@ public class BedWars1058PlayerStats extends ListenerAdapter {
 
     final BedWars.IStats statUtil = bedwarsAPI.getStatsUtil();
     final Level levelUtil = bedwarsAPI.getLevelsUtil();
-    final YamlDocument config = BedwarsCore.getConfig();
+    final YamlDocument config = BedWars1058Core.getConfig();
 
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
@@ -33,8 +32,6 @@ public class BedWars1058PlayerStats extends ListenerAdapter {
         OfflinePlayer player;
 
         if (event.getName().equals(config.getString("Command"))) {
-            event.deferReply();
-
 
             if (Bukkit.getPluginManager().isPluginEnabled("DiscordSRV")) {
                 if (event.getOption("user") != null) {
@@ -74,6 +71,7 @@ public class BedWars1058PlayerStats extends ListenerAdapter {
                 event.reply("``" + player.getName() + "``" + " has not played on the server before.").setEphemeral(true).queue();
                 return;
             }
+            event.deferReply().queue();
 
 
             String level, bedDestroyed, death, finalKills, finalDeath, totalPlayed, kills, loses, win, winStreak, bestWinStreak;
@@ -98,7 +96,7 @@ public class BedWars1058PlayerStats extends ListenerAdapter {
                 winStreak = PlaceholderAPI.setPlaceholders(player, "%winstreak_streak%");
                 bestWinStreak = PlaceholderAPI.setPlaceholders(player, "%winstreak_best_streak%");
             }else {
-                Map<String, Integer> stats = BedwarsCore.getDatabase().getStats(player.getName());
+                Map<String, Integer> stats = BedWars1058Core.getDatabase().getStats(player.getName());
                 level = String.valueOf(stats.getOrDefault("level", 0));
                 bedDestroyed = String.valueOf(stats.getOrDefault("bedDestroyed", 0));
                 death = String.valueOf(stats.getOrDefault("death", 0));
@@ -125,7 +123,7 @@ public class BedWars1058PlayerStats extends ListenerAdapter {
             if (config.getBoolean("Stats.WinStreak.Enable") && Bukkit.getPluginManager().isPluginEnabled("BedWars1058-WinStreak")) builder.addField(config.getString("Stats.WinStreak.Name"), config.getString("Stats.WinStreak.Value").replace("{WINSTREAK}", winStreak), true);
             if (config.getBoolean("Stats.BestWinStreak.Enable") && Bukkit.getPluginManager().isPluginEnabled("BedWars1058-WinStreak")) builder.addField(config.getString("Stats.BestWinStreak.Name"),config.getString("Stats.BestWinStreak.Value").replace("{BESTWINSTREAK}", bestWinStreak), true);
 
-            event.replyEmbeds(builder.build()).queue();
+            event.getHook().editOriginalEmbeds(builder.build()).queue();
 
         }
     }

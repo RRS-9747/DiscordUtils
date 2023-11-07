@@ -3,7 +3,7 @@ package me.rrs.discordutils.bedwars.bedwars1058.listeners;
 import com.andrei1058.bedwars.api.BedWars;
 import com.andrei1058.bedwars.api.levels.Level;
 import me.clip.placeholderapi.PlaceholderAPI;
-import me.rrs.discordutils.bedwars.bedwars1058.BedwarsCore;
+import me.rrs.discordutils.bedwars.bedwars1058.BedWars1058Core;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -31,7 +31,7 @@ public class PlayerLeave implements Listener {
         int win = statUtil.getPlayerWins(player.getUniqueId());
         int winStreak = Integer.parseInt(PlaceholderAPI.setPlaceholders(player, "%winstreak_streak%"));
         int bestWinStreak = Integer.parseInt(PlaceholderAPI.setPlaceholders(player, "%winstreak_best_streak%"));
-        BedwarsCore.getDatabase().updateStats(player.getName(), bedDestroyed, death, finalKills, finalDeath, totalPlayed, kills, loses, win, level, winStreak, bestWinStreak);
+        BedWars1058Core.getDatabase().updateStats(player.getName(), bedDestroyed, death, finalKills, finalDeath, totalPlayed, kills, loses, win, level, winStreak, bestWinStreak);
     }
 
 }

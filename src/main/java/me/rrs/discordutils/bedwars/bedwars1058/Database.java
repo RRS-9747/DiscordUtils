@@ -13,7 +13,7 @@ public class Database {
 
     public void createTable() {
         try (Connection connection = CoreDatabase.getDataSource().getConnection();
-             PreparedStatement statement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS CentralBotBedWars1058 (Player varchar(255) PRIMARY KEY, bedDestroyed int, death int, finalKills int, finalDeath int, totalPlayed int, kills int, loses int, win int, level int, winStreak int, bestWinStreak int);")) {
+             PreparedStatement statement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS DiscordStatsBedWars1058 (Player varchar(255) PRIMARY KEY, bedDestroyed int, death int, finalKills int, finalDeath int, totalPlayed int, kills int, loses int, win int, level int, winStreak int, bestWinStreak int);")) {
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -22,12 +22,12 @@ public class Database {
 
     public void updateStats(String player, int bedDestroyed, int death, int finalKills, int finalDeath, int totalPlayed, int kills, int loses, int win, int level, int winStreak, int bestWinStreak) {
         try (Connection connection = CoreDatabase.getDataSource().getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM CentralBotBedWars1058 WHERE Player = ?");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM DiscordStatsBedWars1058 WHERE Player = ?");
             statement.setString(1, player);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 // player exists, update the stats
-                statement = connection.prepareStatement("UPDATE CentralBotBedWars1058 SET bedDestroyed = ?, death = ?, finalKills = ?, finalDeath = ?, totalPlayed = ?, kills = ?, loses = ?, win = ?, level = ?, winStreak = ?, bestWinStreak = ? WHERE Player = ?");
+                statement = connection.prepareStatement("UPDATE DiscordStatsBedWars1058 SET bedDestroyed = ?, death = ?, finalKills = ?, finalDeath = ?, totalPlayed = ?, kills = ?, loses = ?, win = ?, level = ?, winStreak = ?, bestWinStreak = ? WHERE Player = ?");
                 statement.setInt(1, bedDestroyed);
                 statement.setInt(2, death);
                 statement.setInt(3, finalKills);
@@ -43,7 +43,7 @@ public class Database {
                 statement.executeUpdate();
             } else {
                 // player does not exist, set the stats
-                statement = connection.prepareStatement("INSERT INTO CentralBotBedWars1058 (Player, bedDestroyed, death, finalKills, finalDeath, totalPlayed, kills, loses, win, level, winStreak, bestWinStreak) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                statement = connection.prepareStatement("INSERT INTO DiscordStatsBedWars1058 (Player, bedDestroyed, death, finalKills, finalDeath, totalPlayed, kills, loses, win, level, winStreak, bestWinStreak) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
                 statement.setString(1, player);
                 statement.setInt(2, bedDestroyed);
                 statement.setInt(3, death);
@@ -66,7 +66,7 @@ public class Database {
     public Map<String, Integer> getStats(String playerName) {
         Map<String, Integer> stats = new HashMap<>();
         try (Connection connection = CoreDatabase.getDataSource().getConnection();
-             PreparedStatement statement = connection.prepareStatement("SELECT * FROM CentralBotBedWars1058 WHERE Player = ?")) {
+             PreparedStatement statement = connection.prepareStatement("SELECT * FROM DiscordStatsBedWars1058 WHERE Player = ?")) {
             statement.setString(1, playerName);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
