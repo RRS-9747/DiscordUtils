@@ -15,19 +15,7 @@ depend:
 commands:
   discordutils:
     aliases: du
-  addpapi:
-    description: Set title & placeholder
-    aliases: addpapi
-    permission: discordutils.admin
-    usage: /setpapi <title> <placeholder>
+    usage: /discordutils
+    description: Main command for DiscordUtils plugin
 
-  removepapi:
-    description: Remove title & placeholder
-    aliases: deletepapi
-    permission: discordutils.admin
-    usage: /removepapi <title>
-
-  editpapi:
-    description: edit title & placeholder
-    permission: discordutils.admin
-    usage: /editpapi title|papi <title> <placeholder>
+  profile:

@@ -9,9 +9,7 @@ import dev.dejvokep.boostedyaml.settings.loader.LoaderSettings;
 import dev.dejvokep.boostedyaml.settings.updater.UpdaterSettings;
 import me.rrs.discordutils.DiscordUtils;
 import me.rrs.discordutils.profile.command.discord.StatsCommand;
-import me.rrs.discordutils.profile.command.minecraft.EditPAPICommand;
-import me.rrs.discordutils.profile.command.minecraft.RemovePAPICommand;
-import me.rrs.discordutils.profile.command.minecraft.SetPAPICommand;
+import me.rrs.discordutils.profile.command.minecraft.SetupCommand;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import org.bukkit.Bukkit;
@@ -48,9 +46,7 @@ public class ProfileCore {
 
 
     private static void loadCommands(){
-        DiscordUtils.getInstance().getCommand("addpapi").setExecutor(new SetPAPICommand());
-        DiscordUtils.getInstance().getCommand("removepapi").setExecutor(new RemovePAPICommand());
-        DiscordUtils.getInstance().getCommand("editpapi").setExecutor(new EditPAPICommand());
+        DiscordUtils.getInstance().getCommand("profile").setExecutor(new SetupCommand());
     }
 
     private static void loadEvent(){

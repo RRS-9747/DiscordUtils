@@ -78,7 +78,7 @@ public class StatsCommand extends ListenerAdapter {
             for (Map.Entry<String, String> entry : allPAPITitles.entrySet()) {
                 String PAPITitle = entry.getKey();
                 String PAPIString = entry.getValue();
-                PAPIString = PAPIString.replaceAll("(?i)(&[0-9a-fk-orA-F]|&\\[[0-9a-fA-F]{6}]|§)", "");
+                PAPIString = PAPIString.replaceAll("(?:#([0-9A-Fa-f]{6})|([&§][0-9A-Fa-fK-Ok-oRr]))", "");
                 PAPIString = PlaceholderAPI.setPlaceholders(player, PAPIString);
                 if (PAPIString.isEmpty() || PAPIString.startsWith("%") && PAPIString.endsWith("%")) {
                     PAPIString = config.getString("Embed.Empty-Field");
