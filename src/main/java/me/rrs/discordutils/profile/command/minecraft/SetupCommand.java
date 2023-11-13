@@ -1,6 +1,7 @@
 package me.rrs.discordutils.profile.command.minecraft;
 
 import me.rrs.discordutils.profile.command.ProfileCore;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.*;
@@ -11,6 +12,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class SetupCommand implements CommandExecutor, TabCompleter {
+
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
@@ -22,37 +24,37 @@ public class SetupCommand implements CommandExecutor, TabCompleter {
                     if (sender instanceof Player) {
                         Player player = (Player) sender;
 
-                        if (!player.hasPermission("discordstats.admin")) {
-                            player.sendMessage(ChatColor.RED + "[DiscordStats] " + ChatColor.RESET + "You don't have permission to use this command!");
+                        if (!player.hasPermission("discordutils.admin")) {
+                            player.spigot().sendMessage(new TextComponent(ChatColor.RED + "[DiscordStats] " + ChatColor.RESET + "You don't have permission to use this command!"));
                             return true;
                         }
                     }
 
                         if (args.length != 3) {
-                            sender.sendMessage(ChatColor.RED + "[DiscordStats] " + ChatColor.RESET + "Usage: /profile add <Title> <Placeholder>");
+                            sender.spigot().sendMessage(new TextComponent(ChatColor.RED + "[DiscordStats] " + ChatColor.RESET + "Usage: /profile add <Title> <Placeholder>"));
                             return true;
                         }
 
                         if (!args[2].contains("%")) {
-                            sender.sendMessage(ChatColor.RED + "[DiscordStats] " + ChatColor.RESET + "This is not a valid placeholder");
+                            sender.spigot().sendMessage(new TextComponent(ChatColor.RED + "[DiscordStats] " + ChatColor.RESET + "This is not a valid placeholder"));
                             return true;
                         }
 
                         if (ProfileCore.getDatabase().createPAPITitle(args[1], args[2])){
-                            sender.sendMessage(ChatColor.GREEN + "[DiscordStats] " + ChatColor.RESET + "Title and Placeholder have been added successfully.");
-                        }else sender.sendMessage(ChatColor.RED + "[DiscordStats] " + ChatColor.RESET + "Title already exists.");
+                            sender.spigot().sendMessage(new TextComponent(ChatColor.GREEN + "[DiscordStats] " + ChatColor.RESET + "Title and Placeholder have been added successfully."));
+                        }else sender.spigot().sendMessage(new TextComponent(ChatColor.RED + "[DiscordStats] " + ChatColor.RESET + "Title already exists."));
 
 
                     break;
                 case "edit":
                     if (sender instanceof Player) { //For player
                         Player player = (Player) sender;
-                        if (!player.hasPermission("discordstats.admin")){
-                            player.sendMessage(ChatColor.RED + "[DiscordStats] " + ChatColor.RESET + "You don't have permission to use this command!");
+                        if (!player.hasPermission("discordutils.admin")){
+                            player.spigot().sendMessage(new TextComponent(ChatColor.RED + "[DiscordStats] " + ChatColor.RESET + "You don't have permission to use this command!"));
                             return true;
                         }
                         if (args.length < 4) {
-                            player.sendMessage(ChatColor.RED + "[DiscordStats] " + ChatColor.RESET + "Please provide a field to update, old value and the new value.");
+                            player.spigot().sendMessage(new TextComponent(ChatColor.RED + "[DiscordStats] " + ChatColor.RESET + "Please provide a field to update, old value and the new value."));
                             return false;
                         }
                         String field = args[1];
@@ -61,20 +63,20 @@ public class SetupCommand implements CommandExecutor, TabCompleter {
                         switch (field.toLowerCase()) {
                             case "title":
                                 if (ProfileCore.getDatabase().updatePAPITitle(newValue, searchValue)){
-                                    player.sendMessage(String.format(ChatColor.GREEN + "[DiscordStats] " + ChatColor.RESET + "Successfully updated title %s with: %s", searchValue, newValue));
-                                }else player.sendMessage(String.format(ChatColor.RED + "[DiscordStats] " + ChatColor.RESET + "Error updating title " + searchValue));
+                                    player.spigot().sendMessage(new TextComponent(String.format(ChatColor.GREEN + "[DiscordStats] " + ChatColor.RESET + "Successfully updated title %s with: %s", searchValue, newValue)));
+                                }else player.spigot().sendMessage(new TextComponent(String.format(ChatColor.RED + "[DiscordStats] " + ChatColor.RESET + "Error updating title " + searchValue)));
                                 break;
                             case "papi":
                                 if (!newValue.contains("%")) {
-                                    player.sendMessage(ChatColor.RED + "[DiscordStats] " + ChatColor.RESET + "This is not a valid placeholder");
+                                    player.spigot().sendMessage(new TextComponent(ChatColor.RED + "[DiscordStats] " + ChatColor.RESET + "This is not a valid placeholder"));
                                     return false;
                                 }
                                 if (ProfileCore.getDatabase().updatePAPIString(newValue, searchValue)){
-                                    player.sendMessage(String.format(ChatColor.GREEN + "[DiscordStats] " + ChatColor.RESET + "Successfully updated %s for: %s", searchValue, newValue));
-                                }else player.sendMessage(String.format(ChatColor.RED + "[DiscordStats] " + ChatColor.RESET + "Error updating Placeholder!"));
+                                    player.spigot().sendMessage(new TextComponent(String.format(ChatColor.GREEN + "[DiscordStats] " + ChatColor.RESET + "Successfully updated %s for: %s", searchValue, newValue)));
+                                }else player.spigot().sendMessage(new TextComponent(String.format(ChatColor.RED + "[DiscordStats] " + ChatColor.RESET + "Error updating Placeholder!")));
                                 break;
                             default:
-                                player.sendMessage(ChatColor.RED + "[DiscordStats] " + ChatColor.RESET + "Invalid field provided, valid fields are title & Placeholder");
+                                player.spigot().sendMessage(new TextComponent(ChatColor.RED + "[DiscordStats] " + ChatColor.RESET + "Invalid field provided, valid fields are title & Placeholder"));
                                 return false;
                         }
                     }
@@ -83,26 +85,26 @@ public class SetupCommand implements CommandExecutor, TabCompleter {
                 case "remove":
                     if (sender instanceof Player) {
                         Player player = (Player) sender;
-                        if (!player.hasPermission("discordstats.admin")){
-                            player.sendMessage(ChatColor.RED + "[DiscordStats] " + ChatColor.RESET + "You don't have permission to use this command!");
+                        if (!player.hasPermission("discordutils.admin")){
+                            player.spigot().sendMessage(new TextComponent(ChatColor.RED + "[DiscordStats] " + ChatColor.RESET + "You don't have permission to use this command!"));
                             return true;
                         }
 
                         if (args.length == 1) {
-                            sender.sendMessage(ChatColor.RED + "[DiscordStats] " + ChatColor.RESET + "Please provide a Title name to remove.");
+                            sender.spigot().sendMessage(new TextComponent(ChatColor.RED + "[DiscordStats] " + ChatColor.RESET + "Please provide a Title name to remove."));
                             return false;
                         }
 
                         if (ProfileCore.getDatabase().removePAPITitle(args[1])){
-                            sender.sendMessage(ChatColor.GREEN + "[DiscordStats] " + ChatColor.RESET + args[1] +"Removed Successfully");
-                        }else sender.sendMessage(ChatColor.RED + "[DiscordStats] " + ChatColor.RESET + "Error removing" + args[1]);
+                            sender.spigot().sendMessage(new TextComponent(ChatColor.GREEN + "[DiscordStats] " + ChatColor.RESET + args[1] +"Removed Successfully"));
+                        }else sender.spigot().sendMessage(new TextComponent(ChatColor.RED + "[DiscordStats] " + ChatColor.RESET + "Error removing" + args[1]));
                     }
                     break;
                 case "preset":
                     if (sender instanceof Player) {
                         Player player = (Player) sender;
-                        if (!player.hasPermission("discordstats.admin")) {
-                            player.sendMessage(ChatColor.RED + "[DiscordStats] " + ChatColor.RESET + "You don't have permission to use this command!");
+                        if (!player.hasPermission("discordutils.admin")) {
+                            player.spigot().sendMessage(new TextComponent(ChatColor.RED + "[DiscordStats] " + ChatColor.RESET + "You don't have permission to use this command!"));
                             return true;
                         }
                     }

@@ -26,10 +26,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-
-import static org.bukkit.Bukkit.getPluginManager;
 
 public final class DiscordUtils extends JavaPlugin {
 
@@ -64,6 +61,7 @@ public final class DiscordUtils extends JavaPlugin {
     public ArrayList<YamlDocument> getReloadList() {
         return reloadList;
     }
+
 
     @Override
     public void onLoad(){
@@ -110,10 +108,10 @@ public final class DiscordUtils extends JavaPlugin {
         if (config.getBoolean("Modules.Profile")) {
             ProfileCore.loadModule();
         }
-        if (config.getBoolean("Modules.BedWars.BedWars1058") && getPluginManager().isPluginEnabled("BedWars1058")) {
+        if (config.getBoolean("Modules.BedWars") && Bukkit.getPluginManager().isPluginEnabled("BedWars1058")) {
             BedWars1058Core.loadModule();
         }
-        if (config.getBoolean("Modules.BedWars.MBedWars") && getPluginManager().isPluginEnabled("MBedwars")) {
+        if (config.getBoolean("Modules.BedWars") && Bukkit.getPluginManager().isPluginEnabled("MBedwars")) {
             MBedWarsCore.loadModule();
         }
 

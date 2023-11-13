@@ -5,6 +5,7 @@ import de.marcely.bedwars.api.player.PlayerDataAPI;
 import dev.dejvokep.boostedyaml.YamlDocument;
 import github.scarsz.discordsrv.DiscordSRV;
 import me.rrs.discordutils.bedwars.mbedwars.MBedWarsCore;
+import me.rrs.discordutils.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -19,19 +20,41 @@ import java.util.UUID;
 
 public class MBedWarsPlayerStats extends ListenerAdapter {
 
+    private final Utils utils = new Utils();
+
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
         final YamlDocument config = MBedWarsCore.getConfig();
 
         if (event.getName().equals(config.getString("Command"))){
 
-            final Optional<User> userOption = Optional.ofNullable(event.getOption("user")).map(OptionMapping::getAsUser);
-            final Optional<String> playerNameOption = Optional.ofNullable(event.getOption("name")).map(OptionMapping::getAsString);
-            final OfflinePlayer player = getPlayer(userOption, playerNameOption, event);
+            OfflinePlayer player;
 
-            if (player == null) {
-                event.reply("Player not found").setEphemeral(true).queue();
-                return;
+            if (event.getOption("user") != null) {
+                User mentionedUser = event.getOption("user").getAsUser();
+                if (mentionedUser.isBot()){
+                    event.reply("``" + mentionedUser.getName() + "``" + " is a bot!").setEphemeral(true).queue();
+                    return;
+                }
+
+                String discordId = mentionedUser.getId();
+                player = utils.getPlayerFromDiscord(discordId);
+
+                if (player == null) {
+                    event.reply("``" + mentionedUser.getName() + "``" + " is not linked to a player").setEphemeral(true).queue();
+                    return;
+                }
+            } else if (event.getOption("name") != null) {
+                String name = event.getOption("name").getAsString();
+                player = Bukkit.getOfflinePlayer(name);
+            } else {
+                String discordId = event.getUser().getId();
+                player = utils.getPlayerFromDiscord(discordId);
+
+                if (player == null) {
+                    event.reply("Link your account!").setEphemeral(true).queue();
+                    return;
+                }
             }
 
             if (!player.hasPlayedBefore()) {
@@ -40,18 +63,6 @@ public class MBedWarsPlayerStats extends ListenerAdapter {
             }
             event.deferReply().queue();
             displayPlayerStats(event, player, config);
-        }
-    }
-
-    private OfflinePlayer getPlayer(Optional<User> userOption, Optional<String> playerNameOption, SlashCommandInteractionEvent event) {
-        if (userOption.isPresent()) {
-            UUID uuid = DiscordSRV.getPlugin().getAccountLinkManager().getUuid(userOption.get().getId());
-            return (uuid != null) ? Bukkit.getOfflinePlayer(uuid) : null;
-        } else if (playerNameOption.isPresent()) {
-            return Bukkit.getOfflinePlayer(playerNameOption.get());
-        }else {
-            UUID uuid = DiscordSRV.getPlugin().getAccountLinkManager().getUuid(event.getUser().getId());
-            return (uuid != null) ? Bukkit.getOfflinePlayer(uuid) : null;
         }
     }
 

@@ -5,11 +5,13 @@ api-version: '1.13'
 authors: [ RRS ]
 description: DiscordUtils
 website: https://discord.gg/fV4P2yMSgR
+folia-supported: true
 
 softdepend:
   - DiscordSRV
   - BedWars1058
   - MBedwars
+  - EssentialsDiscordLink
 depend:
   - PlaceholderAPI
 commands:
@@ -17,5 +19,4 @@ commands:
     aliases: du
     usage: /discordutils
     description: Main command for DiscordUtils plugin
-
   profile:

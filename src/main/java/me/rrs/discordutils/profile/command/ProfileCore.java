@@ -55,7 +55,8 @@ public class ProfileCore {
 
     private static void registerSlashCommand(){
 
-        if (Bukkit.getServer().getPluginManager().isPluginEnabled("DiscordSRV")){
+        if (Bukkit.getServer().getPluginManager().isPluginEnabled("DiscordSRV") ||
+                Bukkit.getServer().getPluginManager().isPluginEnabled("EssentialsDiscordLink")){
             DiscordUtils.getInstance().getCommands().add(
                     Commands.slash(config.getString("Command"), "Show player stats")
                     .setGuildOnly(true)

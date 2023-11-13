@@ -1,6 +1,8 @@
 package me.rrs.discordutils;
 
 import dev.dejvokep.boostedyaml.YamlDocument;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -26,8 +28,8 @@ public class Commands implements CommandExecutor, TabCompleter {
                 case "reload":
                     if (sender instanceof Player){
                         Player player = (Player) sender;
-                        if (!player.hasPermission("discordstats.admin")){
-                            player.sendMessage(ChatColor.RED + "[DiscordStats] " + ChatColor.RESET + "You don't have permission to use this command!");
+                        if (!player.hasPermission("discordutils.admin")){
+                            player.spigot().sendMessage(new TextComponent(ChatColor.RED + "[DiscordUtils] " + ChatColor.RESET + "You don't have permission to use this command!"));
                             return true;
                         }
                     }
@@ -38,13 +40,16 @@ public class Commands implements CommandExecutor, TabCompleter {
                             throw new RuntimeException(e);
                         }
                     }
-                    sender.sendMessage("[DiscordUtils] Plugin Reloaded!");
+                    sender.spigot().sendMessage(new TextComponent(ChatColor.GREEN + "[DiscordUtils]" + ChatColor.RESET + "Plugin Reloaded!"));
 
+                    break;
                 case "help":
-                    sender.sendMessage(ChatColor.GREEN + "[DiscordStats] " + ChatColor.RESET + "/discordstats help -> You already discovered this!");
-                    sender.sendMessage(ChatColor.GREEN + "[DiscordStats] " + ChatColor.RESET + "/profile add <Title> <Placeholder>");
-                    sender.sendMessage(ChatColor.GREEN + "[DiscordStats] " + ChatColor.RESET + "/profile edit title|papi <Title> <New Value>");
-                    sender.sendMessage(ChatColor.GREEN + "[DiscordStats] " + ChatColor.RESET + "/profile remove <Title>");
+                    sender.spigot().sendMessage(new TextComponent(ChatColor.GREEN + "[DiscordUtils] " + ChatColor.RESET + "/discordstats help -> You already discovered this!"));
+                    sender.spigot().sendMessage(new TextComponent(ChatColor.GREEN + "[DiscordUtils] " + ChatColor.RESET + "/profile add <Title> <Placeholder>"));
+                    sender.spigot().sendMessage(new TextComponent(ChatColor.GREEN + "[DiscordUtils] " + ChatColor.RESET + "/profile edit title|papi <Title> <New Value>"));
+                    sender.spigot().sendMessage(new TextComponent(ChatColor.GREEN + "[DiscordUtils] " + ChatColor.RESET + "/profile remove <Title>"));
+
+                    break;
                 case "debug":
 
             }

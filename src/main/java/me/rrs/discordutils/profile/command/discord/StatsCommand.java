@@ -1,9 +1,9 @@
 package me.rrs.discordutils.profile.command.discord;
 
 import dev.dejvokep.boostedyaml.YamlDocument;
-import github.scarsz.discordsrv.DiscordSRV;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.rrs.discordutils.profile.command.ProfileCore;
+import me.rrs.discordutils.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -14,11 +14,11 @@ import org.bukkit.OfflinePlayer;
 import java.awt.*;
 import java.time.Instant;
 import java.util.Map;
-import java.util.UUID;
 
 public class StatsCommand extends ListenerAdapter {
 
     private final YamlDocument config = ProfileCore.getConfig();
+    private final Utils utils = new Utils();
 
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
@@ -26,39 +26,33 @@ public class StatsCommand extends ListenerAdapter {
         if (event.getName().equals(config.getString("Command"))){
             OfflinePlayer player;
 
-            if (Bukkit.getPluginManager().isPluginEnabled("DiscordSRV")) {
                 if (event.getOption("user") != null) {
-                User mentionedUser = event.getOption("user").getAsUser();
-                    UUID uuid = DiscordSRV.getPlugin().getAccountLinkManager().getUuid(mentionedUser.getId());
+                    User mentionedUser = event.getOption("user").getAsUser();
+                    if (mentionedUser.isBot()){
+                        event.reply("``" + mentionedUser.getName() + "``" + " is a bot!").setEphemeral(true).queue();
+                        return;
+                    }
 
-                    if (uuid == null) {
+                    String discordId = mentionedUser.getId();
+                    player = utils.getPlayerFromDiscord(discordId);
+
+                    if (player == null) {
                         event.reply("``" + mentionedUser.getName() + "``" + " is not linked to a player").setEphemeral(true).queue();
                         return;
                     }
-                    player = Bukkit.getOfflinePlayer(uuid);
-
-                } else if (event.getOption("name") != null){
+                } else if (event.getOption("name") != null) {
                     String name = event.getOption("name").getAsString();
                     player = Bukkit.getOfflinePlayer(name);
-
                 } else {
-                    UUID uuid = DiscordSRV.getPlugin().getAccountLinkManager().getUuid(event.getUser().getId());
-                    if (uuid == null) {
+                    String discordId = event.getUser().getId();
+                    player = utils.getPlayerFromDiscord(discordId);
+
+                    if (player == null) {
                         event.reply("Link your account!").setEphemeral(true).queue();
                         return;
                     }
-                    player = Bukkit.getOfflinePlayer(uuid);
                 }
 
-            } else {
-                if (event.getOption("name") == null){
-                    event.reply("Need a user").setEphemeral(true).queue();
-                    return;
-                }else {
-                    String name = event.getOption("name").getAsString();
-                    player = Bukkit.getOfflinePlayer(name);
-                }
-            }
 
             if (!player.hasPlayedBefore()) {
                 event.reply("``" + player.getName() + "``" + " has not played on the server before.").setEphemeral(true).queue();

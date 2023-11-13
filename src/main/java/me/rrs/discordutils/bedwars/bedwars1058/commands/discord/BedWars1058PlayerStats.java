@@ -6,6 +6,7 @@ import dev.dejvokep.boostedyaml.YamlDocument;
 import github.scarsz.discordsrv.DiscordSRV;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.rrs.discordutils.bedwars.bedwars1058.BedWars1058Core;
+import me.rrs.discordutils.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -25,6 +26,7 @@ public class BedWars1058PlayerStats extends ListenerAdapter {
     final BedWars.IStats statUtil = bedwarsAPI.getStatsUtil();
     final Level levelUtil = bedwarsAPI.getLevelsUtil();
     final YamlDocument config = BedWars1058Core.getConfig();
+    private final Utils utils = new Utils();
 
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
@@ -33,37 +35,30 @@ public class BedWars1058PlayerStats extends ListenerAdapter {
 
         if (event.getName().equals(config.getString("Command"))) {
 
-            if (Bukkit.getPluginManager().isPluginEnabled("DiscordSRV")) {
-                if (event.getOption("user") != null) {
-                    User mentionedUser = event.getOption("user").getAsUser();
-                    UUID uuid = DiscordSRV.getPlugin().getAccountLinkManager().getUuid(mentionedUser.getId());
-
-                    if (uuid == null) {
-                        event.reply("``" + mentionedUser.getName() + "``" + " is not linked to a player").setEphemeral(true).queue();
-                        return;
-                    }
-                    player = Bukkit.getOfflinePlayer(uuid);
-
-                } else if (event.getOption("name") != null){
-                    String name = event.getOption("name").getAsString();
-                    player = Bukkit.getOfflinePlayer(name);
-
-                } else {
-                    UUID uuid = DiscordSRV.getPlugin().getAccountLinkManager().getUuid(event.getUser().getId());
-                    if (uuid == null) {
-                        event.reply("Link your account!").setEphemeral(true).queue();
-                        return;
-                    }
-                    player = Bukkit.getOfflinePlayer(uuid);
+            if (event.getOption("user") != null) {
+                User mentionedUser = event.getOption("user").getAsUser();
+                if (mentionedUser.isBot()){
+                    event.reply("``" + mentionedUser.getName() + "``" + " is a bot!").setEphemeral(true).queue();
+                    return;
                 }
 
-            } else {
-                if (event.getOption("name") == null){
-                    event.reply("Need a user").setEphemeral(true).queue();
+                String discordId = mentionedUser.getId();
+                player = utils.getPlayerFromDiscord(discordId);
+
+                if (player == null) {
+                    event.reply("``" + mentionedUser.getName() + "``" + " is not linked to a player").setEphemeral(true).queue();
                     return;
-                }else {
-                    String name = event.getOption("name").getAsString();
-                    player = Bukkit.getOfflinePlayer(name);
+                }
+            } else if (event.getOption("name") != null) {
+                String name = event.getOption("name").getAsString();
+                player = Bukkit.getOfflinePlayer(name);
+            } else {
+                String discordId = event.getUser().getId();
+                player = utils.getPlayerFromDiscord(discordId);
+
+                if (player == null) {
+                    event.reply("Link your account!").setEphemeral(true).queue();
+                    return;
                 }
             }
 
