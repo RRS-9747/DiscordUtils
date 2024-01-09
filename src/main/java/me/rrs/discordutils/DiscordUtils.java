@@ -9,6 +9,9 @@ import dev.dejvokep.boostedyaml.settings.loader.LoaderSettings;
 import dev.dejvokep.boostedyaml.settings.updater.UpdaterSettings;
 import me.rrs.discordutils.bedwars.bedwars1058.BedWars1058Core;
 import me.rrs.discordutils.bedwars.mbedwars.MBedWarsCore;
+import me.rrs.discordutils.business.Payment;
+import me.rrs.discordutils.level.Database;
+import me.rrs.discordutils.level.LevelUp;
 import me.rrs.discordutils.profile.command.ProfileCore;
 import me.rrs.discordutils.utils.UpdateAPI;
 import net.dv8tion.jda.api.JDA;
@@ -115,9 +118,14 @@ public final class DiscordUtils extends JavaPlugin {
             MBedWarsCore.loadModule();
         }
 
+
+        Database database1 = new Database();
+        database1.createLevelTable();
+
         jda.updateCommands().addCommands(commands).queue();
 
         getCommand("discordutils").setExecutor(new Commands());
+
     }
 
     @Override
@@ -138,7 +146,7 @@ public final class DiscordUtils extends JavaPlugin {
                 .build();
         try {
             jda.awaitReady();
-            Bukkit.getLogger().info("[DiscordUtils] Logged as " + jda.getSelfUser().getName() + "#" + jda.getSelfUser().getDiscriminator());
+            Bukkit.getLogger().info("[DiscordUtils] Logged as " + jda.getSelfUser().getName());
         } catch (InterruptedException ignored) {
         }
     }
