@@ -9,9 +9,8 @@ import dev.dejvokep.boostedyaml.settings.loader.LoaderSettings;
 import dev.dejvokep.boostedyaml.settings.updater.UpdaterSettings;
 import me.rrs.discordutils.bedwars.bedwars1058.BedWars1058Core;
 import me.rrs.discordutils.bedwars.mbedwars.MBedWarsCore;
-import me.rrs.discordutils.business.Payment;
+import me.rrs.discordutils.bedwars.screamingbw.ScreamingCore;
 import me.rrs.discordutils.level.Database;
-import me.rrs.discordutils.level.LevelUp;
 import me.rrs.discordutils.profile.command.ProfileCore;
 import me.rrs.discordutils.utils.UpdateAPI;
 import net.dv8tion.jda.api.JDA;
@@ -117,10 +116,13 @@ public final class DiscordUtils extends JavaPlugin {
         if (config.getBoolean("Modules.BedWars") && Bukkit.getPluginManager().isPluginEnabled("MBedwars")) {
             MBedWarsCore.loadModule();
         }
+        if (config.getBoolean("Modules.BedWars") && Bukkit.getPluginManager().isPluginEnabled("BedWars")) {
+            ScreamingCore.loadModule();
+        }
 
 
-        Database database1 = new Database();
-        database1.createLevelTable();
+        Database database = new Database();
+        database.createLevelTable();
 
         jda.updateCommands().addCommands(commands).queue();
 

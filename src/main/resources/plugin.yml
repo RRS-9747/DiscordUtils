@@ -11,6 +11,7 @@ softdepend:
   - DiscordSRV
   - BedWars1058
   - MBedwars
+  - BedWars
   - EssentialsDiscordLink
 depend:
   - PlaceholderAPI
