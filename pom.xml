@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>me.rrs</groupId>
-    <artifactId>DiscordUtils</artifactId>
+    <artifactId>discordUtils</artifactId>
     <version>3.2.0</version>
     <packaging>jar</packaging>
 
@@ -80,6 +80,14 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>RRS-9747</name>
+            <url>https://maven.pkg.github.com/RRS-9747/DiscordUtils</url>
+        </repository>
+    </distributionManagement>
 
     <repositories>
         <repository>
