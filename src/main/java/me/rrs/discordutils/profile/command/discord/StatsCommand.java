@@ -25,7 +25,7 @@ public class StatsCommand extends ListenerAdapter {
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
         if (!event.getName().equalsIgnoreCase(config.getString("Command"))) return;
 
-        OfflinePlayer player = resolvePlayer(event);
+        OfflinePlayer player = utils.resolvePlayer(event);
         if (player == null) return;
 
         if (!player.hasPlayedBefore()) {
@@ -37,39 +37,6 @@ public class StatsCommand extends ListenerAdapter {
         event.deferReply().queue();
         EmbedBuilder embed = buildEmbed(player, event.getUser().getName());
         event.getHook().editOriginalEmbeds(embed.build()).queue();
-    }
-
-    private OfflinePlayer resolvePlayer(SlashCommandInteractionEvent event) {
-        OptionMapping userOption = event.getOption("user");
-        OptionMapping nameOption = event.getOption("name");
-
-        if (userOption != null) {
-            User mentionedUser = userOption.getAsUser();
-            if (mentionedUser.isBot()) {
-                event.reply("``" + mentionedUser.getName() + "`` is a bot!")
-                        .setEphemeral(true).queue();
-                return null;
-            }
-
-            OfflinePlayer linked = utils.getPlayerFromDiscord(mentionedUser.getId());
-            if (linked == null) {
-                event.reply("``" + mentionedUser.getName() + "`` is not linked to a player.")
-                        .setEphemeral(true).queue();
-            }
-            return linked;
-        }
-
-        if (nameOption != null) {
-            return Bukkit.getOfflinePlayer(nameOption.getAsString());
-        }
-
-        // Default to invoking user
-        OfflinePlayer linked = utils.getPlayerFromDiscord(event.getUser().getId());
-        if (linked == null) {
-            event.reply("Link your account!").setEphemeral(true).queue();
-        }
-
-        return linked;
     }
 
     private EmbedBuilder buildEmbed(OfflinePlayer player, String authorName) {
